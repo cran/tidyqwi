@@ -8,7 +8,7 @@ knitr::opts_chunk$set(
 #  library(future)
 #  library(tidyqwi)
 #  library(purrr)
-#  library (plyr)
+#  library (tidyverse)
 
 ## ----eval=FALSE----------------------------------------------------------
 #  year <- c("2008", "2009", "2010","2011")
@@ -38,7 +38,7 @@ knitr::opts_chunk$set(
 #                      apikey = APIkey))
 
 ## ----eval = FALSE--------------------------------------------------------
-#  qwi_data <- ldply (qwi_data, data.frame)
+#  qwi_data <- purrr::map_dfr(qwi_data, as_tibble)
 #  
 
 ## ----eval=FALSE----------------------------------------------------------

@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mona Ahmadiani" />
 
-<meta name="date" content="2019-02-28" />
+<meta name="date" content="2019-06-19" />
 
 <title>Gathering QWI Data Over Several Years for Multiple States</title>
 
@@ -291,6 +291,9 @@ code > span.al { color: #ff0000; font-weight: bold; }
 code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
+
+
+
 </head>
 
 <body>
@@ -299,8 +302,8 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 
 <h1 class="title toc-ignore">Gathering QWI Data Over Several Years for Multiple States</h1>
-<h4 class="author"><em>Mona Ahmadiani</em></h4>
-<h4 class="date"><em>2019-02-28</em></h4>
+<h4 class="author">Mona Ahmadiani</h4>
+<h4 class="date">2019-06-19</h4>
 
 
 
@@ -310,7 +313,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(future)</a>
 <a class="sourceLine" id="cb1-2" title="2"><span class="kw">library</span>(tidyqwi)</a>
 <a class="sourceLine" id="cb1-3" title="3"><span class="kw">library</span>(purrr)</a>
-<a class="sourceLine" id="cb1-4" title="4"><span class="kw">library</span> (plyr)</a></code></pre></div>
+<a class="sourceLine" id="cb1-4" title="4"><span class="kw">library</span> (tidyverse)</a></code></pre></div>
 <p>Then we can create the different combinations of year and state in order to submit to <code>tidyqwi.</code></p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">year &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;2008&quot;</span>, <span class="st">&quot;2009&quot;</span>, <span class="st">&quot;2010&quot;</span>,<span class="st">&quot;2011&quot;</span>)</a>
 <a class="sourceLine" id="cb2-2" title="2">state &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;01&quot;</span>,<span class="st">&quot;02&quot;</span>,<span class="st">&quot;04&quot;</span>,<span class="st">&quot;05&quot;</span>,<span class="st">&quot;06&quot;</span>,<span class="st">&quot;08&quot;</span>,<span class="st">&quot;09&quot;</span>,<span class="st">&quot;10&quot;</span>,<span class="st">&quot;11&quot;</span>,<span class="st">&quot;12&quot;</span>,</a>
@@ -337,7 +340,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <a class="sourceLine" id="cb3-11" title="11">                    <span class="dt">processing =</span> <span class="st">&quot;multiprocess&quot;</span>,</a>
 <a class="sourceLine" id="cb3-12" title="12">                    <span class="dt">apikey =</span> APIkey))</a></code></pre></div>
 <p>After this function returns out values we can collapse these data into a single data set.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">qwi_data &lt;-<span class="st"> </span><span class="kw">ldply</span> (qwi_data, data.frame)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">qwi_data &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw">map_dfr</span>(qwi_data, as_tibble)</a></code></pre></div>
 <p>And then add the labels for our variables if desired.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">qwi_data &lt;-<span class="st"> </span><span class="kw">add_qwi_labels</span>(qwi_data)</a></code></pre></div>
 </div>

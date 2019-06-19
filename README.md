@@ -1,15 +1,22 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+<!-- badges here -->
+
+[![CRAN
+status](https://www.r-pkg.org/badges/version/tidyqwi)](https://cran.r-project.org/package=tidyqwi)
 [![Travis build
 status](https://travis-ci.org/medewitt/tidyqwi.svg?branch=master)](https://travis-ci.org/medewitt/tidyqwi)
 [![Coverage
 status](https://codecov.io/gh/medewitt/tidyqwi/branch/master/graph/badge.svg)](https://codecov.io/github/medewitt/tidyqwi?branch=master)
 [![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![](https://cranlogs.r-pkg.org/badges/tidyqwi)](https://cran.r-project.org/package=tidyqwi)[![DOI](http://joss.theoj.org/papers/10.21105/joss.01462/status.svg)](https://doi.org/10.21105/joss.01462)
+
+<!-- end badges -->
 
 # tidyqwi
 
-The goal of tidyqwi is to make accessing the US Census Bureau’s
+The goal of `tidyqwi` is to make accessing the US Census Bureau’s
 *Quarterly Workforce Indicators* easier in a tidy format. This package
 allows a user to specify the years and states of interest as well as
 some of the additional parameters (desired cross tabs, MSA vs county
@@ -21,9 +28,19 @@ This is a work in progress\!
 
 ## Installation
 
+Install via CRAN with:
+
 ``` r
-devtools::install_github("medewitt/tidyqwi")
+install.packages("tidyqwi")
 ```
+
+Or the development version at:
+
+``` r
+remotes::install_github("medewitt/tidyqwi")
+```
+
+## Use
 
 After installation you can load and retrieve the desired data\!
 
@@ -34,7 +51,7 @@ nc_qwi <- get_qwi(years = "2010",
                   states = "11", 
                   geography = "county", 
                   apikey =  census_key, 
-                  quiet = TRUE, endpoint = "rh",
+                  endpoint = "rh",
                   variables = c("sEmp", "Emp"), all_groups = FALSE,
                   industry_level = "2", processing = "multiprocess")
 ```
@@ -93,13 +110,15 @@ labelled_nc %>%
   labs(
     title = "Quarterly Workforce Indicators for Forsyth County",
     subtitle = attributes(labelled_nc$Emp)$label,
-    caption = "Data: US Census Bureau QWI"
+    caption = "Data: US Census Bureau QWI",
+    x = "Month"
   )+
   theme_minimal()
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
 
 Please note that the ‘tidyqwi’ project is released with a [Contributor
-Code of Conduct](CODE_OF_CONDUCT.md). By contributing to this project,
-you agree to abide by its terms.
+Code of
+Conduct](https://github.com/medewitt/tidyqwi/blob/master/CODE_OF_CONDUCT.md).
+By contributing to this project, you agree to abide by its terms.
