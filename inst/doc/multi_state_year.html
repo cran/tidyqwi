@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <meta name="author" content="Mona Ahmadiani" />
 
-<meta name="date" content="2019-06-19" />
+<meta name="date" content="2020-05-04" />
 
 <title>Gathering QWI Data Over Several Years for Multiple States</title>
 
@@ -37,7 +37,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(title);
+  { content: attr(data-line-number);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -96,7 +96,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -117,9 +117,6 @@ padding-right: 2em;
 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 font-size: 14px;
 line-height: 1.35;
-}
-#header {
-text-align: center;
 }
 #TOC {
 clear: both;
@@ -288,7 +285,8 @@ code > span.st { color: #d14; }
 code > span.co { color: #888888; font-style: italic; } 
 code > span.ot { color: #007020; } 
 code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
 
@@ -303,48 +301,51 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Gathering QWI Data Over Several Years for Multiple States</h1>
 <h4 class="author">Mona Ahmadiani</h4>
-<h4 class="date">2019-06-19</h4>
+<h4 class="date">2020-05-04</h4>
 
 
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>Sometimes one may want to collect data from multiple states over multiple years. To do this we recommend loading the following libraries:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(future)</a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="kw">library</span>(tidyqwi)</a>
-<a class="sourceLine" id="cb1-3" title="3"><span class="kw">library</span>(purrr)</a>
-<a class="sourceLine" id="cb1-4" title="4"><span class="kw">library</span> (tidyverse)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(future)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(tidyqwi)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">library</span>(purrr)</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw">library</span> (tidyverse)</a></code></pre></div>
 <p>Then we can create the different combinations of year and state in order to submit to <code>tidyqwi.</code></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">year &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;2008&quot;</span>, <span class="st">&quot;2009&quot;</span>, <span class="st">&quot;2010&quot;</span>,<span class="st">&quot;2011&quot;</span>)</a>
-<a class="sourceLine" id="cb2-2" title="2">state &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;01&quot;</span>,<span class="st">&quot;02&quot;</span>,<span class="st">&quot;04&quot;</span>,<span class="st">&quot;05&quot;</span>,<span class="st">&quot;06&quot;</span>,<span class="st">&quot;08&quot;</span>,<span class="st">&quot;09&quot;</span>,<span class="st">&quot;10&quot;</span>,<span class="st">&quot;11&quot;</span>,<span class="st">&quot;12&quot;</span>,</a>
-<a class="sourceLine" id="cb2-3" title="3">           <span class="st">&quot;13&quot;</span>,<span class="st">&quot;15&quot;</span>,<span class="st">&quot;16&quot;</span>,<span class="st">&quot;17&quot;</span>,<span class="st">&quot;18&quot;</span>,<span class="st">&quot;19&quot;</span>,<span class="st">&quot;20&quot;</span>,<span class="st">&quot;21&quot;</span>,<span class="st">&quot;22&quot;</span>,<span class="st">&quot;23&quot;</span>,</a>
-<a class="sourceLine" id="cb2-4" title="4">           <span class="st">&quot;24&quot;</span>,<span class="st">&quot;25&quot;</span>,<span class="st">&quot;26&quot;</span>,<span class="st">&quot;27&quot;</span>,<span class="st">&quot;28&quot;</span>,<span class="st">&quot;29&quot;</span>,<span class="st">&quot;30&quot;</span>,<span class="st">&quot;31&quot;</span>,<span class="st">&quot;32&quot;</span>,<span class="st">&quot;33&quot;</span>,</a>
-<a class="sourceLine" id="cb2-5" title="5">           <span class="st">&quot;34&quot;</span>,<span class="st">&quot;35&quot;</span>,<span class="st">&quot;36&quot;</span>,<span class="st">&quot;37&quot;</span>,<span class="st">&quot;38&quot;</span>,<span class="st">&quot;39&quot;</span>,<span class="st">&quot;40&quot;</span>,<span class="st">&quot;41&quot;</span>,<span class="st">&quot;42&quot;</span>,<span class="st">&quot;44&quot;</span>,</a>
-<a class="sourceLine" id="cb2-6" title="6">           <span class="st">&quot;45&quot;</span>,<span class="st">&quot;46&quot;</span>,<span class="st">&quot;47&quot;</span>,<span class="st">&quot;48&quot;</span>,<span class="st">&quot;49&quot;</span>,<span class="st">&quot;50&quot;</span>,<span class="st">&quot;51&quot;</span>,<span class="st">&quot;53&quot;</span>,<span class="st">&quot;54&quot;</span>,<span class="st">&quot;55&quot;</span>,</a>
-<a class="sourceLine" id="cb2-7" title="7">           <span class="st">&quot;56&quot;</span>)</a>
-<a class="sourceLine" id="cb2-8" title="8"></a>
-<a class="sourceLine" id="cb2-9" title="9">argList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">x =</span> state, <span class="dt">y =</span> year)</a>
-<a class="sourceLine" id="cb2-10" title="10"></a>
-<a class="sourceLine" id="cb2-11" title="11">arguments &lt;-<span class="st"> </span><span class="kw">cross_df</span>(argList)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">year &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;2008&quot;</span>, <span class="st">&quot;2009&quot;</span>, <span class="st">&quot;2010&quot;</span>,<span class="st">&quot;2011&quot;</span>)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">state &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;01&quot;</span>,<span class="st">&quot;02&quot;</span>,<span class="st">&quot;04&quot;</span>,<span class="st">&quot;05&quot;</span>,<span class="st">&quot;06&quot;</span>,<span class="st">&quot;08&quot;</span>,<span class="st">&quot;09&quot;</span>,<span class="st">&quot;10&quot;</span>,<span class="st">&quot;11&quot;</span>,<span class="st">&quot;12&quot;</span>,</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">           <span class="st">&quot;13&quot;</span>,<span class="st">&quot;15&quot;</span>,<span class="st">&quot;16&quot;</span>,<span class="st">&quot;17&quot;</span>,<span class="st">&quot;18&quot;</span>,<span class="st">&quot;19&quot;</span>,<span class="st">&quot;20&quot;</span>,<span class="st">&quot;21&quot;</span>,<span class="st">&quot;22&quot;</span>,<span class="st">&quot;23&quot;</span>,</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">           <span class="st">&quot;24&quot;</span>,<span class="st">&quot;25&quot;</span>,<span class="st">&quot;26&quot;</span>,<span class="st">&quot;27&quot;</span>,<span class="st">&quot;28&quot;</span>,<span class="st">&quot;29&quot;</span>,<span class="st">&quot;30&quot;</span>,<span class="st">&quot;31&quot;</span>,<span class="st">&quot;32&quot;</span>,<span class="st">&quot;33&quot;</span>,</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">           <span class="st">&quot;34&quot;</span>,<span class="st">&quot;35&quot;</span>,<span class="st">&quot;36&quot;</span>,<span class="st">&quot;37&quot;</span>,<span class="st">&quot;38&quot;</span>,<span class="st">&quot;39&quot;</span>,<span class="st">&quot;40&quot;</span>,<span class="st">&quot;41&quot;</span>,<span class="st">&quot;42&quot;</span>,<span class="st">&quot;44&quot;</span>,</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">           <span class="st">&quot;45&quot;</span>,<span class="st">&quot;46&quot;</span>,<span class="st">&quot;47&quot;</span>,<span class="st">&quot;48&quot;</span>,<span class="st">&quot;49&quot;</span>,<span class="st">&quot;50&quot;</span>,<span class="st">&quot;51&quot;</span>,<span class="st">&quot;53&quot;</span>,<span class="st">&quot;54&quot;</span>,<span class="st">&quot;55&quot;</span>,</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">           <span class="st">&quot;56&quot;</span>)</a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">argList &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">x =</span> state, <span class="dt">y =</span> year)</a>
+<a class="sourceLine" id="cb2-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">arguments &lt;-<span class="st"> </span><span class="kw">cross_df</span>(argList)</a></code></pre></div>
 <p>Using the multiple processing function we can submit the following:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">plan</span>(<span class="st">&quot;multiprocess&quot;</span>)</a>
-<a class="sourceLine" id="cb3-2" title="2"></a>
-<a class="sourceLine" id="cb3-3" title="3">qwi_data &lt;-<span class="st"> </span><span class="kw">map2</span>(arguments<span class="op">$</span>x, arguments<span class="op">$</span>y, <span class="op">~</span></a>
-<a class="sourceLine" id="cb3-4" title="4"><span class="st">                  </span><span class="kw">get_qwi</span>(</a>
-<a class="sourceLine" id="cb3-5" title="5">                    <span class="dt">states =</span> .x,</a>
-<a class="sourceLine" id="cb3-6" title="6">                    <span class="dt">years  =</span> .y ,</a>
-<a class="sourceLine" id="cb3-7" title="7">                    <span class="dt">industry_level =</span> <span class="st">&quot;2&quot;</span>,</a>
-<a class="sourceLine" id="cb3-8" title="8">                    <span class="dt">all_groups =</span> <span class="ot">FALSE</span>,</a>
-<a class="sourceLine" id="cb3-9" title="9">                    <span class="dt">endpoint =</span> <span class="st">&quot;se&quot;</span>,</a>
-<a class="sourceLine" id="cb3-10" title="10">                    <span class="dt">geography =</span> <span class="st">&quot;cbsa&quot;</span>,</a>
-<a class="sourceLine" id="cb3-11" title="11">                    <span class="dt">processing =</span> <span class="st">&quot;multiprocess&quot;</span>,</a>
-<a class="sourceLine" id="cb3-12" title="12">                    <span class="dt">apikey =</span> APIkey))</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">plan</span>(<span class="st">&quot;multiprocess&quot;</span>)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">qwi_data &lt;-<span class="st"> </span><span class="kw">map2</span>(arguments<span class="op">$</span>x, arguments<span class="op">$</span>y, <span class="op">~</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="st">                  </span><span class="kw">get_qwi</span>(</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">                    <span class="dt">states =</span> .x,</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">                    <span class="dt">years  =</span> .y ,</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">                    <span class="dt">industry_level =</span> <span class="st">&quot;2&quot;</span>,</a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">                    <span class="dt">all_groups =</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">                    <span class="dt">endpoint =</span> <span class="st">&quot;se&quot;</span>,</a>
+<a class="sourceLine" id="cb3-10" data-line-number="10">                    <span class="dt">geography =</span> <span class="st">&quot;cbsa&quot;</span>,</a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">                    <span class="dt">processing =</span> <span class="st">&quot;multiprocess&quot;</span>,</a>
+<a class="sourceLine" id="cb3-12" data-line-number="12">                    <span class="dt">apikey =</span> APIkey))</a></code></pre></div>
 <p>After this function returns out values we can collapse these data into a single data set.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">qwi_data &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw">map_dfr</span>(qwi_data, as_tibble)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">qwi_data &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw">map_dfr</span>(qwi_data, as_tibble)</a></code></pre></div>
 <p>And then add the labels for our variables if desired.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">qwi_data &lt;-<span class="st"> </span><span class="kw">add_qwi_labels</span>(qwi_data)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">qwi_data &lt;-<span class="st"> </span><span class="kw">add_qwi_labels</span>(qwi_data)</a></code></pre></div>
 </div>
 
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

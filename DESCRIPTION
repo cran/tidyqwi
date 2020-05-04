@@ -1,7 +1,7 @@
 Package: tidyqwi
 Title: A Convenient API for Accessing United States Census Bureau's
         Quarterly Workforce Indicator
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: c(
     person(given = "Michael",
            family = "DeWitt",
@@ -26,20 +26,20 @@ Description: The purpose of this package is to access the
     descriptions added if desired. Information about the United States Census Bureau's 
     Quarterly Workforce Indicator is available at 
     <https://www.census.gov/data/developers/data-sets/qwi.html>.
-Depends: R (>= 3.0), future (>= 1.6.2)
+Depends: R (>= 3.2), future (>= 1.6.2)
 Imports: dplyr, httr, jsonlite, magrittr, xml2, stringr, purrr, stats,
         tidyr, labelled, furrr
 License: MIT + file LICENSE
 BugReports: https://github.com/medewitt/tidyqwi/issues
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 Suggests: testthat, covr, knitr, rmarkdown
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2019-06-19 14:16:41 UTC; dewittme
+Packaged: 2020-05-04 09:58:27 UTC; michael
 Author: Michael DeWitt [aut, cre] (<https://orcid.org/0000-0001-8940-1967>),
   Mona Ahmadiani [aut] (<https://orcid.org/0000-0002-1269-5685>),
   Adam S. Hyde [aut] (<https://orcid.org/0000-0003-1205-0032>)
 Repository: CRAN
-Date/Publication: 2019-06-19 15:50:03 UTC
+Date/Publication: 2020-05-04 10:30:02 UTC
